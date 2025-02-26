@@ -5,6 +5,7 @@ import { TagsModule } from './tags/tags.module';
 import { PrismaModule } from 'prisma/prisma.module';
 import { BullModule } from '@nestjs/bull';
 import { USER_QUEUE } from './constants/constants';
+import { RedisModule } from './redis/redis.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { USER_QUEUE } from './constants/constants';
     BullModule.registerQueue({
       name:USER_QUEUE
     }),
+    RedisModule,
   ],
   controllers: [],
   providers: [],
