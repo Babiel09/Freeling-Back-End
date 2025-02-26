@@ -12,3 +12,44 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User{
+  id Int @id @default(autoincrement())
+  name String
+  email String
+  password String
+  photo String
+  workName String
+  services Services[] @relation("UserServices")
+  rate Float //De 1 a 5
+  recomendations Recomendation[] @relation("UserRecomendations")
+}
+
+//O usuário só podera recomendar se dar uma nota para o provedor do serviço maior do que 4!
+model Recomendation{
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id], name:"UserRecomendations")
+  userId Int
+  userWhoMadeTheRecomendationId Int
+  text String
+}
+
+model Tags{
+  id Int @id @default(autoincrement())
+  name String
+  services Services @relation(fields: [serviceId], references: [id], name:"TagsService")
+  serviceId Int
+}
+
+model Services{
+  id Int @id @default(autoincrement())
+  title String
+  photo String
+  description String
+  DateToDeliverTheProject DateTime
+  price Float
+  tags Tags[] @relation("TagsService")
+  user User @relation(fields: [userId], references: [id], name:"UserServices")
+  userId Int
+}
+
