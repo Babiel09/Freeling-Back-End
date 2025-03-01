@@ -58,5 +58,32 @@ export class UserService {
         };
     };
 
+    public async findSpecifiedUser(id:number):Promise<User>{
+        try{
+            const userInCache = await this.redisService.get("user-specified");
+            
+            if(!userInCache){
+                const tryToFindUser = await this.verifyUserId(id);
+
+                const addUserToCache = await this.redisService.set(
+                    "user-specified",
+                    JSON.stringify(tryToFindUser),
+                    "EX",
+                    30
+                );
+
+                if(!addUserToCache){
+                    this.logger.error("We can't add the specified user to the cache!");
+                    throw new HttpException("We can't add the specified user to the cache!",500);
+                };
+
+                return tryToFindUser;
+            };
+            return JSON.parse(userInCache);
+        }catch(err){
+            this.logger.error(err.message);
+            throw new HttpException(err.message,err.status);
+        };
+    };
 
 };
