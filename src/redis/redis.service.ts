@@ -5,14 +5,15 @@ import Redis from 'ioredis';
 export class RedisService extends Redis{
     constructor(){
         const logger = new Logger(RedisService.name);
-        super();
+        super({
+            host:process.env.REDIS_HOST,
+            port:6379
+        }
+        );
         if(super.on){
             logger.log("Redis dependencies on!");
-        };
-        
-        if(super.off){
+        }else{
             logger.error("Redis dependencies off, please restart your program!");
         };
-        
     };
 };
