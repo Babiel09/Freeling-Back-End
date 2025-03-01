@@ -86,4 +86,45 @@ export class UserService {
         };
     };
 
+    public async deleteSpecifiedUser(id:number){
+        try{
+            const tryToFindUser = await this.verifyUserId(id);
+
+            const tryToDeleteUser = await this.prisma.delete({
+                where:{
+                    id:Number(tryToFindUser.id)
+                },
+            });
+
+            if(!tryToDeleteUser){
+                this.logger.error("We can't delete the user!");
+                throw new HttpException("We can't delete the user, please verify the user id!",400);
+            };
+
+            const tryToDeleteServices = await this.pr.services.delete({
+                where:{
+                    id:Number(tryToDeleteUser.id)
+                },
+            });
+
+            if(!tryToDeleteServices){
+                throw new HttpException("User Deleted!",204)
+            };
+            
+            const tryToDeleteRecomendations = await this.pr.recomendation.delete({
+                where:{
+                    id:Number(tryToDeleteUser.id)
+                },
+            });
+            
+            if(!tryToDeleteRecomendations){
+                throw new HttpException("User Deleted!",204)
+            };
+
+        }catch(err){
+            this.logger.error(err.message);
+            throw new HttpException(err.message,err.status);
+        };
+    };
+
 };
