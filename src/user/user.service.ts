@@ -102,34 +102,38 @@ export class UserService {
                 throw new HttpException("We can't delete the user, please verify the user id!",400);
             };
 
-            const tryToDeleteServices = await this.pr.services.delete({
+            const tryToFindService = await this.pr.services.findUnique({
                 where:{
                     userId:Number(tryToDeleteUser.id)
-                },
+                }
             });
-
-            if(!tryToDeleteServices){
-                throw new HttpException("User Deleted!",204)
-            };
             
-            const tryToDeleteRecomendations = await this.pr.recomendation.delete({
+            if(tryToFindService){
+                const tryToDeleteServices = await this.pr.services.delete({
+                    where:{
+                        userId:Number(tryToDeleteUser.id)
+                    },
+                });
+
+                const tryToDeleteTags = await this.pr.tags.delete({
+                    where:{
+                        serviceId:Number(tryToDeleteServices.id)
+                    },
+                });
+            };
+
+            const tryToFindRecomendations = await this.pr.recomendation.findUnique({
                 where:{
                     userId:Number(tryToDeleteUser.id)
-                },
-            });
-            
-            if(!tryToDeleteRecomendations){
-                throw new HttpException("User Deleted!",204)
-            };
-            
-            const tryToDeleteTags = await this.pr.tags.delete({
-                where:{
-                    serviceId:Number(tryToDeleteServices.id)
-                },
+                }
             });
 
-            if(!tryToDeleteTags){
-                throw new HttpException("Service Deleted!",204)
+            if(tryToFindRecomendations){
+                const tryToDeleteRecomendations = await this.pr.recomendation.delete({
+                    where:{
+                        userId:Number(tryToDeleteUser.id)
+                    },
+                });
             };
 
         }catch(err){
