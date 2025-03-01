@@ -5,6 +5,7 @@ import { RedisModule } from 'src/redis/redis.module';
 import { BullModule } from '@nestjs/bull';
 import { USER_QUEUE } from 'src/constants/constants';
 import { PrismaModule } from 'prisma/prisma.module';
+import { CreateUserDTO } from './DTO/user.create.dto';
 
 @Module({
   imports:[
@@ -15,6 +16,6 @@ import { PrismaModule } from 'prisma/prisma.module';
     }),
   ],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService,CreateUserDTO]
 })
 export class UserModule {}
