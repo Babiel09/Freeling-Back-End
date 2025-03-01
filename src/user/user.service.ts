@@ -103,7 +103,7 @@ export class UserService {
 
             const tryToDeleteServices = await this.pr.services.delete({
                 where:{
-                    id:Number(tryToDeleteUser.id)
+                    userId:Number(tryToDeleteUser.id)
                 },
             });
 
@@ -113,12 +113,22 @@ export class UserService {
             
             const tryToDeleteRecomendations = await this.pr.recomendation.delete({
                 where:{
-                    id:Number(tryToDeleteUser.id)
+                    userId:Number(tryToDeleteUser.id)
                 },
             });
             
             if(!tryToDeleteRecomendations){
                 throw new HttpException("User Deleted!",204)
+            };
+            
+            const tryToDeleteTags = await this.pr.tags.delete({
+                where:{
+                    serviceId:Number(tryToDeleteServices.id)
+                },
+            });
+
+            if(!tryToDeleteTags){
+                throw new HttpException("Service Deleted!",204)
             };
 
         }catch(err){
@@ -126,5 +136,14 @@ export class UserService {
             throw new HttpException(err.message,err.status);
         };
     };
+
+    //public async insertUser():Promise<User>{
+    //    try{
+    //        
+    //    }catch(err){
+    //        this.logger.error(err.message);
+    //        throw new HttpException(err.message,err.status);
+    //    };
+    //};
 
 };
