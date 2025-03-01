@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, Logger, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Logger, Param, Post, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
@@ -27,7 +27,7 @@ private logger = new Logger(UserController.name)
     };
   };
 
-  @Post("/v1/allUsers")
+  @Post("/v1/newUser")
   private async createUser(@Body()data:CreateUserDTO,@Res()res:Response):Promise<Response>{
     try{
 
@@ -55,4 +55,17 @@ private logger = new Logger(UserController.name)
     throw new HttpException(err.message,err.status);
     };
   };
+
+  @Delete("/v1/specificUserToDie/:id")
+  private async deleteUser(@Res()res:Response,@Param("id")id:number):Promise<Response>{
+    try{
+      const userToDelete = await this.userService.deleteSpecifiedUser(id);
+
+      return res.status(204).send(userToDelete);
+    }catch(err){
+    this.logger.error(err.message);
+    throw new HttpException(err.message,err.status);
+    };
+  };
+
 };
