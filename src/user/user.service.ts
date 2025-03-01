@@ -3,6 +3,7 @@ import { Prisma, User } from '@prisma/client';
 import { DefaultArgs } from '@prisma/client/runtime/library';
 import { PrismaService } from 'prisma/prisma.service';
 import { RedisService } from 'src/redis/redis.service';
+import { CreateUserDTO } from './DTO/user.create.dto';
 
 @Injectable()
 export class UserService {
@@ -137,13 +138,29 @@ export class UserService {
         };
     };
 
-    //public async insertUser():Promise<User>{
-    //    try{
-    //        
-    //    }catch(err){
-    //        this.logger.error(err.message);
-    //        throw new HttpException(err.message,err.status);
-    //    };
-    //};
+    public async insertUser(data:CreateUserDTO):Promise<User>{
+        try{
+            const tryToCreateUser = await this.prisma.create({
+                data:{
+                    name:data.name,
+                    email:data.email,
+                    password:data.password,
+                    workName:data.workName,
+                    photo:"",
+                    rate:0
+                }
+            });
+
+            if(!tryToCreateUser){
+                this.logger.error("We can't create the user!");
+                throw new HttpException("We can't create the user!",500);
+            };
+
+            return tryToCreateUser;
+        }catch(err){
+            this.logger.error(err.message);
+            throw new HttpException(err.message,err.status);
+        };
+    };
 
 };
