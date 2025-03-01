@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpException, Logger, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Logger, Param, Post, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
@@ -38,6 +38,18 @@ private logger = new Logger(UserController.name)
         const createUser = await this.userService.insertUser(data);
 
         return res.status(201).send(createUser);
+    }catch(err){
+    this.logger.error(err.message);
+    throw new HttpException(err.message,err.status);
+    };
+  };
+
+  @Get("/v1/specificUser/:id")
+  private async getSpecificUser(@Res()res:Response,@Param("id")id:number):Promise<Response>{
+    try{
+      const specifiedUser = await this.userService.findSpecifiedUser(id);
+
+      return res.status(200).send(specifiedUser);
     }catch(err){
     this.logger.error(err.message);
     throw new HttpException(err.message,err.status);
