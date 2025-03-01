@@ -31,7 +31,9 @@ private logger = new Logger(UserController.name)
   private async createUser(@Body()data:CreateUserDTO,@Res()res:Response):Promise<Response>{
     try{
 
-        // const realPassword
+        const realPassword = await this.randomizeHash(data.password);
+
+        data.password = realPassword;
 
         const createUser = await this.userService.insertUser(data);
 
