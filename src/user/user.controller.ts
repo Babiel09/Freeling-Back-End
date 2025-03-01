@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, Logger, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, Logger, Param, Post, Put, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import * as bcrypt from 'bcrypt';
 import { Response } from 'express';
@@ -62,6 +62,19 @@ private logger = new Logger(UserController.name)
       const userToDelete = await this.userService.deleteSpecifiedUser(id);
 
       return res.status(204).send(userToDelete);
+    }catch(err){
+    this.logger.error(err.message);
+    throw new HttpException(err.message,err.status);
+    };
+  };
+
+  //Essa rota não permite mudar a senha
+  @Put("/v1/specificUserToUpdate/:id")
+  private async updateUser(@Res()res:Response,@Param("id")id:number,@Body()data:CreateUserDTO):Promise<Response>{
+    try{
+      const userToUpdate = await this.userService.updateUser(id,data);
+
+      return res.status(200).send(userToUpdate);
     }catch(err){
     this.logger.error(err.message);
     throw new HttpException(err.message,err.status);
