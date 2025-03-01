@@ -2,18 +2,23 @@ import { Injectable, Logger } from '@nestjs/common';
 import Redis from 'ioredis';
 
 @Injectable()
-export class RedisService extends Redis{
+export class RedisService{
+    private client: Redis; 
+    private logger = new Logger(RedisService.name);
     constructor(){
-        const logger = new Logger(RedisService.name);
-        super({
-            host:process.env.REDIS_HOST,
-            port:6379
-        }
-        );
-        if(super.on){
-            logger.log("Redis dependencies on!");
-        }else{
-            logger.error("Redis dependencies off, please restart your program!");
-        };
+        this.client = new Redis({
+            host: process.env.REDIS_HOST,
+            port: Number(process.env.REDIS_PORT),
+        })
+    
+        this.client.on('connect', () => {
+            this.logger.log('Redis connected successfully!');
+        });
+    
+        this.client.on('error', (err) => {
+            this.logger.error(`Redis connection error: ${err.message}`);
+        });
     };
+
+
 };
