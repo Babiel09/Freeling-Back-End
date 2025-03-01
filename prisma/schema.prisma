@@ -16,7 +16,7 @@ datasource db {
 model User{
   id Int @id @default(autoincrement())
   name String
-  email String
+  email String @unique
   password String
   photo String
   workName String
@@ -29,7 +29,7 @@ model User{
 model Recomendation{
   id Int @id @default(autoincrement())
   user User @relation(fields: [userId], references: [id], name:"UserRecomendations")
-  userId Int
+  userId Int @unique
   userWhoMadeTheRecomendationId Int
   text String
 }
@@ -38,7 +38,7 @@ model Tags{
   id Int @id @default(autoincrement())
   name String
   services Services @relation(fields: [serviceId], references: [id], name:"TagsService")
-  serviceId Int
+  serviceId Int @unique
 }
 
 model Services{
@@ -50,6 +50,6 @@ model Services{
   price Float
   tags Tags[] @relation("TagsService")
   user User @relation(fields: [userId], references: [id], name:"UserServices")
-  userId Int
+  userId Int @unique
 }
 
