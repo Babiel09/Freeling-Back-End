@@ -167,4 +167,33 @@ export class UserService {
         };
     };
 
+    public async updateUser(id:number,data:CreateUserDTO):Promise<User>{
+        try{
+            const tryToFindUser = await this.verifyUserId(id);
+
+            const tryToUpdateUser = await this.prisma.update({
+                where:{
+                    id:Number(tryToFindUser.id)
+                },
+                data:{
+                    name:data.name,
+                    email:data.email,
+                    password:data.password,
+                    workName:data.workName,
+                }
+            });
+
+            if(!tryToUpdateUser){
+                this.logger.error("We can't update the user!");
+                throw new HttpException("We can't update the user!",500);
+            };
+
+            return tryToUpdateUser;
+        }catch(err){
+            this.logger.error(err.message);
+            throw new HttpException(err.message,err.status);
+        };
+
+    };
+
 };
