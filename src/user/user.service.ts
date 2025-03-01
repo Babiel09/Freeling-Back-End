@@ -42,7 +42,7 @@ export class UserService {
                     "users",
                     JSON.stringify(allUsers),
                     "EX",
-                    60
+                    30
                 );
 
                 if(!addUsersInCache){
