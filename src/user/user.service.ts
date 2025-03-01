@@ -12,6 +12,21 @@ export class UserService {
         this.prisma = pr.user;
     };
 
+    private async verifyUserId(id:number){
+        try{
+            const findUser = await this.prisma.findUnique({
+                where:{
+                    id:Number(id)
+                },
+            });
+
+            return findUser;
+        }catch(err){
+            this.logger.error(err.message);
+            throw new HttpException(err.message,err.status);
+        };
+    };
+
     public async showAllUsers():Promise<User[]>{
         try{
             const allUsersInCache = await this.redisService.get("users");
@@ -38,7 +53,10 @@ export class UserService {
             };
             return JSON.parse(allUsersInCache);
         } catch(err){
-
+            this.logger.error(err.message);
+            throw new HttpException(err.message,err.status);
         };
     };
+
+
 };
