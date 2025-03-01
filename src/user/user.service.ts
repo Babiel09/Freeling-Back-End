@@ -61,7 +61,7 @@ export class UserService {
     public async findSpecifiedUser(id:number):Promise<User>{
         try{
             const userInCache = await this.redisService.get("user-specified");
-            
+
             if(!userInCache){
                 const tryToFindUser = await this.verifyUserId(id);
 
@@ -69,7 +69,7 @@ export class UserService {
                     "user-specified",
                     JSON.stringify(tryToFindUser),
                     "EX",
-                    30
+                    15
                 );
 
                 if(!addUserToCache){
