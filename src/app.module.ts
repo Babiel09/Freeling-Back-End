@@ -6,6 +6,7 @@ import { PrismaModule } from 'prisma/prisma.module';
 import { BullModule } from '@nestjs/bull';
 import { USER_QUEUE } from './constants/constants';
 import { RedisModule } from './redis/redis.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { RedisModule } from './redis/redis.module';
       name:USER_QUEUE
     }),
     RedisModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
