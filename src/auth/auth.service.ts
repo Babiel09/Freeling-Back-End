@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-
+import * as bcrypt from 'bcrypt';
 @Injectable()
 export class AuthService {
     private logger = new Logger(AuthService.name);
     constructor(private jwtService:JwtService, userService:UserService){};
 
-    public async login(){};
+    public async login(email:string,password:string){};
 };
