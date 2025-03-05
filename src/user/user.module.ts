@@ -16,6 +16,7 @@ import { CreateUserDTO } from './DTO/user.create.dto';
     }),
   ],
   controllers: [UserController],
-  providers: [UserService,CreateUserDTO]
+  providers: [UserService,CreateUserDTO],
+  exports:[UserService]
 })
 export class UserModule {}
