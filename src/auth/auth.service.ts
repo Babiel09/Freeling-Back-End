@@ -29,6 +29,8 @@ export class AuthService {
 
             const createToken = await this.jwtService.signAsync(payload);
 
+            this.logger.debug(`\n \n TOKEN: \n \n ${createToken} \n \n`)
+
             return JSON.parse(createToken);
 
         }catch(err){
