@@ -195,4 +195,24 @@ export class UserService {
 
     };
 
+    public async findUserByEmail(email:string):Promise<User>{
+        try{
+            const tryToFindUserByEmail = await this.prisma.findUnique({
+                where:{
+                    email:email,
+                }
+            });
+
+            if(!tryToFindUserByEmail){
+                this.logger.error("We can't find the user by this email, please verify the email!");
+                throw new HttpException("We can't find the user by this email, please verify the email!",404);
+            };
+
+            return tryToFindUserByEmail;
+        }catch(err){
+            this.logger.error(err.message);
+            throw new HttpException(err.message,err.status);
+        };
+    };
+
 };
